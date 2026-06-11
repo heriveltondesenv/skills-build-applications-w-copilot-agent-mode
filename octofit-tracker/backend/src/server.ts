@@ -32,33 +32,33 @@ app.get('/', (_req, res) => {
 
 app.get('/api/users/', async (_req, res) => {
   const users = await UserModel.find().sort({ name: 1 });
-  res.json({ message: 'Users endpoint', users });
+  res.json(users);
 });
 
 app.get('/api/teams/', async (_req, res) => {
   const teams = await TeamModel.find()
     .populate('owner', 'name email')
     .populate('members', 'name email');
-  res.json({ message: 'Teams endpoint', teams });
+  res.json(teams);
 });
 
 app.get('/api/activities/', async (_req, res) => {
   const activities = await ActivityModel.find()
     .populate('user', 'name email')
     .sort({ date: -1 });
-  res.json({ message: 'Activities endpoint', activities });
+  res.json(activities);
 });
 
 app.get('/api/leaderboard/', async (_req, res) => {
   const leaderboard = await LeaderboardEntryModel.find()
     .populate('user', 'name email')
     .sort({ rank: 1 });
-  res.json({ message: 'Leaderboard endpoint', leaderboard });
+  res.json(leaderboard);
 });
 
 app.get('/api/workouts/', async (_req, res) => {
   const workouts = await WorkoutModel.find().sort({ durationMinutes: 1 });
-  res.json({ message: 'Workouts endpoint', workouts });
+  res.json(workouts);
 });
 
 async function startServer() {
