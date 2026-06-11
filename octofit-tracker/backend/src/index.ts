@@ -1,14 +1,65 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import UserModel from './models/User';
+import TeamModel from './models/Team';
+import ActivityModel from './models/Activity';
+import LeaderboardEntryModel from './models/LeaderboardEntry';
+import WorkoutModel from './models/Workout';
 
 const app = express();
-const port = process.env.PORT ? Number(process.env.PORT) : 8000;
-const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/octofit';
+const port = Number(process.env.PORT || 8000);
+const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/octofit_db';
+const codespaceName = process.env.CODESPACE_NAME;
+const apiHost = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev`
+  : `http://localhost:8000`;
+const apiBaseUrl = `${apiHost}/api`;
 
 app.use(express.json());
 
 app.get('/', (_req, res) => {
-  res.json({ message: 'OctoFit Tracker backend is running.' });
+  res.json({
+    message: 'OctoFit Tracker backend is running.',
+    apiBaseUrl,
+    routes: {
+      users: `${apiBaseUrl}/users/`,
+      teams: `${apiBaseUrl}/teams/`,
+      activities: `${apiBaseUrl}/activities/`,
+      leaderboard: `${apiBaseUrl}/leaderboard/`,
+      workouts: `${apiBaseUrl}/workouts/`,
+    },
+  });
+});
+
+app.get('/api/users/', async (_req, res) => {
+  const users = await UserModel.find().sort({ name: 1 });
+  res.json({ message: 'Users endpoint', users });
+});
+
+app.get('/api/teams/', async (_req, res) => {
+  const teams = await TeamModel.find()
+    .populate('owner', 'name email')
+    .populate('members', 'name email');
+  res.json({ message: 'Teams endpoint', teams });
+});
+
+app.get('/api/activities/', async (_req, res) => {
+  const activities = await ActivityModel.find()
+    .populate('user', 'name email')
+    .sort({ date: -1 });
+  res.json({ message: 'Activities endpoint', activities });
+});
+
+app.get('/api/leaderboard/', async (_req, res) => {
+  const leaderboard = await LeaderboardEntryModel.find()
+    .populate('user', 'name email')
+    .sort({ rank: 1 });
+  res.json({ message: 'Leaderboard endpoint', leaderboard });
+});
+
+app.get('/api/workouts/', async (_req, res) => {
+  const workouts = await WorkoutModel.find().sort({ durationMinutes: 1 });
+  res.json({ message: 'Workouts endpoint', workouts });
 });
 
 async function startServer() {
@@ -17,6 +68,9 @@ async function startServer() {
     console.log('Connected to MongoDB at', mongoUri);
     app.listen(port, () => {
       console.log(`Backend listening on http://localhost:${port}`);
+      if (codespaceName) {
+        console.log(`Codespaces-aware API base URL: ${apiBaseUrl}`);
+      }
     });
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error);
