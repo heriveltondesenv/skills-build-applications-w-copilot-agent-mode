@@ -15,8 +15,6 @@ permissions:
 
 env:
   STEP_4_FILE: ".github/steps/4-setup-django-rest-framework.md"
-env:
-  STEP_4_FILE: ".github/steps/4-setup-django-rest-framework.md"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:

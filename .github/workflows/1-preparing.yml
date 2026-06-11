@@ -12,8 +12,6 @@ permissions:
 
 env:
   STEP_2_FILE: ".github/steps/2-application-initial-setup.md"
-env:
-  STEP_2_FILE: ".github/steps/2-application-initial-setup.md"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:

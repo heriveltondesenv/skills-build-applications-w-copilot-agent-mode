@@ -16,8 +16,6 @@ permissions:
 
 env:
   REVIEW_FILE: ".github/steps/x-review.md"
-env:
-  REVIEW_FILE: ".github/steps/x-review.md"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:

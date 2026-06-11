@@ -12,8 +12,6 @@ permissions:
 
 env:
   STEP_1_FILE: ".github/steps/1-preparing.md"
-env:
-  STEP_1_FILE: ".github/steps/1-preparing.md"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
